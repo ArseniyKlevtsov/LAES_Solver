@@ -2,6 +2,7 @@
 using LAES_Solver.Application.WebSocketUtilities;
 using LAES_Solver.Domain.Interfaces.Services;
 using LAES_Solver.Infrastracture.Logging;
+using LAES_Solver.Infrastracture.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LAES_Solver.Server.Extentios;
@@ -15,6 +16,7 @@ public static class ServiceRegistrator
         services.AddTransient<LltSolverService>();
 
         services.AddTransient<ILoger, ConsoleLoger>();
+        services.AddTransient<IDtoConvertor, DtoConvertor>();
 
         return services;
     }

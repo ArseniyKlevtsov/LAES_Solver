@@ -35,10 +35,7 @@ public class LltSolverService : WebSocketService
 
     protected override void OnError(Exception exception)
     {
-        throw new NotImplementedException();
+        _loger.Log(exception.Message);
     }
-
-
-
 
 }
