@@ -27,4 +27,17 @@ public class DtoConvertor : IDtoConvertor
             throw new DtoConvertException($"Failed to convert JSON to {typeof(T).Name}");
         }
     }
+
+    public string ConvertToJson<T>(T dto)
+    {
+        try
+        {
+            var jsonDto = JsonConvert.SerializeObject(dto);
+            return jsonDto;
+        }
+        catch (JsonException)
+        {
+            throw new DtoConvertException($"Failed to convert {typeof(T).Name} to JSON ");
+        }
+    }
 }

@@ -3,4 +3,6 @@
 public class SolveSmallMatrixDto
 {
     public double[][] Matrix { get; set; }
+    public double[] VectorB { get; set; }
+
 }
