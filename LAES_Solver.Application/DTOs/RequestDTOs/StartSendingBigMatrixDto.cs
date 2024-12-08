@@ -2,6 +2,7 @@
 
 public class StartSendingBigMatrixDto
 {
+    public List<double> VectorB {  get; set; }
     public int TotalRows { get; set; }
-    public int TaskKey { get; set; }
+    public string TaskKey { get; set; }
 }

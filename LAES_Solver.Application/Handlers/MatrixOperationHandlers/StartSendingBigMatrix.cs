@@ -1,6 +1,20 @@
-﻿namespace LAES_Solver.Application.Handlers.MatrixOperationHandlers;
+﻿using LAES_Solver.Application.DTOs.RequestDTOs;
+using LAES_Solver.Application.DTOs.ResponseDTOs;
+using LAES_Solver.Domain.Interfaces;
+using LAES_Solver.Domain.ValueObjects;
 
-public class StartSendingBigMatrix
+namespace LAES_Solver.Application.Handlers.MatrixOperationHandlers;
+
+public static class StartSendingBigMatrix
 {
+    public static async Task<HandlerResponse> ExecuteAsync(StartSendingBigMatrixDto dto, IMatrixFileService matrixFileService)
+    {
+        var taskName = await matrixFileService.InitMatrixTaskAsync(dto.TaskKey, dto.TotalRows);
+        await matrixFileService.WriteVectorDataAsync(taskName, "b", dto.VectorB);
 
+        var message = new Message("StartSendingAccepted", new StartSendingAcceptedDto() { TaskName = taskName});
+        var handlerResponse = new HandlerResponse() { SenderMessage = message };
+
+        return handlerResponse;
+    }
 }

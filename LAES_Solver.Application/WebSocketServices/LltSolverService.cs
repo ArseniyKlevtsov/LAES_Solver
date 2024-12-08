@@ -27,7 +27,7 @@ public class LltSolverService : WebSocketService
     {
         var message = _dtoConvertor.ConvertToDto<Message>(jsonMessage);
         _loger.Log($"RECEIVE from {Id}: {message.Command}");
-        var handlerResponse = _mainHandler.Route(message, Id);
+        var handlerResponse =  await _mainHandler.Route(message, Id);
         await SendHandlerResponse(handlerResponse);
     }
 

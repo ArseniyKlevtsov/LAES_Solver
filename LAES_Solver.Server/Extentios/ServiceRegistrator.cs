@@ -22,9 +22,9 @@ public static class ServiceRegistrator
         services.AddTransient<MainHandler>();
 
         //services
+        services.AddTransient<LltService>();
         services.AddTransient<ILoger, ConsoleLoger>();
         services.AddTransient<IDtoConvertor, DtoConvertor>();
-        services.AddTransient<LltService>();
         services.AddTransient<IMatrixFileService>(provider =>
         {
             string baseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "MatrixData");

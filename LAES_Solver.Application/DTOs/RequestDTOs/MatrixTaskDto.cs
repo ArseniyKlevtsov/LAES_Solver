@@ -3,4 +3,5 @@
 public class MatrixTaskDto
 {
     public string TaskKey { get; set; }
+    public string TaskName { get; set; }
 }
