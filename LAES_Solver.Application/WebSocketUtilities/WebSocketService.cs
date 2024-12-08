@@ -22,10 +22,10 @@ public abstract class WebSocketService
         Sessions.AddSession(Id, Connection);
     }
 
-    protected abstract void OnMessage(string message);
-    protected abstract void OnOpen();
-    protected abstract void OnClose();
-    protected abstract void OnError(Exception exception);
+    protected abstract Task OnMessage(string message);
+    protected abstract Task OnOpen();
+    protected abstract Task OnClose();
+    protected abstract Task OnError(Exception exception);
 
     protected async Task SendAsync(string message)
     {

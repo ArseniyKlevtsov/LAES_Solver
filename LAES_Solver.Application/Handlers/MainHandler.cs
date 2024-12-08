@@ -21,8 +21,6 @@ public class MainHandler
     {
         HandlerResponse? response = null;
         var jsonData = message.Dto.ToString();
-        Console.WriteLine(jsonData);
-        Console.WriteLine("jsonData");
         switch (message.Command)
         {
             case "SolveSmallMatrix":
@@ -30,19 +28,19 @@ public class MainHandler
                 response = SolveSmallMatrix.Execute(dto, _lltService);
                 break;
             case "StartSendingBigMatrix":
-                ; 
+                var startDto = _dtoConvertor.ConvertToDto<StartSendingBigMatrixDto>(jsonData);
                 break;
             case "BigMatrixPart":
-                ; 
+                var partDto = _dtoConvertor.ConvertToDto<BigMatrixPartDto>(jsonData);
                 break;
             case "StopSendingBigMatrix":
-                ; 
+                var stopDto = _dtoConvertor.ConvertToDto<StopSendingBigMatrixDto>(jsonData);
                 break;
             case "StartSolving":
-                ; 
+                var solvingDto = _dtoConvertor.ConvertToDto<MatrixTaskDto>(jsonData);
                 break;
             case "GetSolution":
-                ; 
+                var getSolutionDto = _dtoConvertor.ConvertToDto<MatrixTaskDto>(jsonData);
                 break;
             default:
                 response = DefaultHandler.Execute(message);

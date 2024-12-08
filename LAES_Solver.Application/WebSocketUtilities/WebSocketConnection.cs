@@ -7,19 +7,23 @@ public class WebSocketConnection
 {
     private readonly WebSocket _webSocket;
 
-    public event Action<string> OnMessage;
-    public event Action OnOpen;
-    public event Action OnClose;
-    public event Action<Exception> OnError;
+    public event Func<string, Task> OnMessage;
+    public event Func<Task> OnOpen;
+    public event Func<Task> OnClose;
+    public event Func<Exception, Task> OnError;
 
     public WebSocketConnection(WebSocket webSocket)
     {
         _webSocket = webSocket;
-        OnOpen?.Invoke();
+         
     }
 
-    public async void Start()
+    public async Task Start()
     {
+        if (OnOpen != null)
+        {
+            await OnOpen.Invoke();
+        }
         while (_webSocket.State == WebSocketState.Open)
         {
             try
@@ -27,11 +31,17 @@ public class WebSocketConnection
                 var buffer = new byte[1024];
                 var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                OnMessage?.Invoke(message);
+                if (OnMessage != null)
+                {
+                    await OnMessage.Invoke(message);
+                }
             }
             catch (Exception ex)
             {
-                OnError?.Invoke(ex);
+                if (OnError != null)
+                {
+                    await OnError.Invoke(ex);
+                }
             }
         }
         await CloseAsync();
@@ -49,6 +59,9 @@ public class WebSocketConnection
     public async Task CloseAsync()
     {
         await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closure", CancellationToken.None);
-        OnClose?.Invoke();
+        if (OnClose != null)
+        {
+            await OnClose.Invoke();
+        }
     }
 }

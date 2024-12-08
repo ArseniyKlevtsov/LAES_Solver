@@ -1,5 +1,4 @@
-﻿using LAES_Solver.Application.DTOs.ResponseDTOs;
-using LAES_Solver.Application.Handlers;
+﻿using LAES_Solver.Application.Handlers;
 using LAES_Solver.Application.WebSocketUtilities;
 using LAES_Solver.Domain.Interfaces.Services;
 using LAES_Solver.Domain.ValueObjects;
@@ -19,28 +18,27 @@ public class LltSolverService : WebSocketService
         _dtoConvertor = dtoConvertor;
     }
 
-    protected override void OnOpen()
+    protected override async Task OnOpen()
     {
-        _loger.Log($"connected: {Id}:");
+        _loger.Log($"CONNECTED: {Id}:");
     }
 
-    protected override async void OnMessage(string jsonMessage)
+    protected override async Task OnMessage(string jsonMessage)
     {
         var message = _dtoConvertor.ConvertToDto<Message>(jsonMessage);
-        _loger.Log($"receive from {Id}: {message.Command}");
-        Console.WriteLine(jsonMessage);
+        _loger.Log($"RECEIVE from {Id}: {message.Command}");
         var handlerResponse = _mainHandler.Route(message, Id);
         await SendHandlerResponse(handlerResponse);
     }
 
-    protected override void OnClose()
+    protected override async Task OnClose()
     {
-        _loger.Log($"disconnected: {Id}:");
+        _loger.Log($"DISCONNECTED: {Id}:");
     }
 
-    protected override void OnError(Exception exception)
+    protected override async Task OnError(Exception exception)
     {
-        _loger.Log($"error occurred while processing the request");
+        _loger.Log($"EXCEPTION");
         _loger.Log(exception.Message);
     }
 
@@ -48,14 +46,14 @@ public class LltSolverService : WebSocketService
     {
         string jsonMessage = _dtoConvertor.ConvertToJson(message);
         await SendAsync(jsonMessage);
-        _loger.Log($"send to {Id}: {message.Command}");
+        _loger.Log($"SEND to {Id}: {message.Command}");
     }
 
     private async Task SendMessageToAsync(Message message, string id)
     {
         string jsonMessage = _dtoConvertor.ConvertToJson(message);
         await Sessions.SendToAsync(jsonMessage, id);
-        _loger.Log($"send to {id}: {message.Command}");
+        _loger.Log($"SEND to {id}: {message.Command}");
     }
 
     private async Task SendHandlerResponse(HandlerResponse response)
