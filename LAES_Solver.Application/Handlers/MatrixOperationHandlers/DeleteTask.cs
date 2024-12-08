@@ -5,17 +5,15 @@ using LAES_Solver.Domain.ValueObjects;
 
 namespace LAES_Solver.Application.Handlers.MatrixOperationHandlers;
 
-public static class GetTaskStatus
+public static class DeleteTask
 {
     public static async Task<HandlerResponse> ExecuteAsync(MatrixTaskDto dto, IMatrixFileService matrixFileService)
     {
-        var taskInfo = await matrixFileService.GetTaskInfoAsync(dto.TaskName);
+        matrixFileService.DeleteTask(dto.TaskName);
 
-        var message = new Message("TaskInfo", new TaskInfoDto()
+        var message = new Message("TaskDeleted", new TaskDeletedDto()
         {
-            TaskName = taskInfo.TaskName,
-            RowCount = taskInfo.RowCount,
-            ReceivedRows = taskInfo.ReceivedRows,
+            TaskName = dto.TaskName
         });
         var handlerResponse = new HandlerResponse() { SenderMessage = message };
 

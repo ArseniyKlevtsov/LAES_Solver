@@ -1,4 +1,6 @@
-﻿namespace LAES_Solver.Domain.Interfaces;
+﻿using LAES_Solver.Domain.ValueObjects;
+
+namespace LAES_Solver.Domain.Interfaces;
 
 public interface IMatrixFileService
 {
@@ -9,5 +11,5 @@ public interface IMatrixFileService
     Task WriteVectorDataAsync(string taskName, string fileName, List<double> vectorData);
     Task<List<double>> ReadVectorDataAsync(string taskName, string fileName);
     void DeleteTask(string taskName);
-    Task<List<int>> GetReceivedRowsAsync(string taskName);
+    Task<TaskInfo> GetTaskInfoAsync(string taskName);
 }

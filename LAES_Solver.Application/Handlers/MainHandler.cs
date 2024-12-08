@@ -58,6 +58,8 @@ public class MainHandler
 
             case "DeleteTask":
                 var deleteTaskDto = dtoConvertor.ConvertToDto<MatrixTaskDto>(jsonData);
+                await MatrixTaskValidator.ValidateAsync(deleteTaskDto.TaskKey, deleteTaskDto.TaskName, matrixFileService);
+                response = await DeleteTask.ExecuteAsync(deleteTaskDto, matrixFileService);
                 break;
 
             default:

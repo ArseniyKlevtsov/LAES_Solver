@@ -1,4 +1,5 @@
 ﻿using LAES_Solver.Domain.Interfaces;
+using LAES_Solver.Domain.ValueObjects;
 
 namespace LAES_Solver.Infrastracture.Services;
 
@@ -164,7 +165,7 @@ public class MatrixFileService : IMatrixFileService
         }
     }
 
-    public async Task<List<int>> GetReceivedRowsAsync(string taskName)
+    public async Task<TaskInfo> GetTaskInfoAsync(string taskName)
     {
         var taskInfoFilePath = Path.Combine(_baseDirectory, "MatrixData", taskName, "TaskInfo.txt");
 
@@ -174,17 +175,30 @@ public class MatrixFileService : IMatrixFileService
         }
 
         var content = await File.ReadAllTextAsync(taskInfoFilePath);
-        var receivedRowsLine = content.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                                      .FirstOrDefault(line => line.StartsWith("ReceivedRows:"));
-
-        if (receivedRowsLine != null)
+        var taskInfo = new TaskInfo
         {
-            var receivedRows = receivedRowsLine.Substring("ReceivedRows:".Length).Trim();
-            return receivedRows.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                              .Select(int.Parse)
-                              .ToList();
+            TaskName = taskName,
+            ReceivedRows = new List<int>()
+        };
+
+        foreach (var line in content.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (line.StartsWith("RowCount:"))
+            {
+                if (int.TryParse(line.Substring("RowCount:".Length).Trim(), out int rowCount))
+                {
+                    taskInfo.RowCount = rowCount;
+                }
+            }
+            else if (line.StartsWith("ReceivedRows:"))
+            {
+                var receivedRows = line.Substring("ReceivedRows:".Length).Trim();
+                taskInfo.ReceivedRows = receivedRows.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                                                     .Select(int.Parse)
+                                                     .ToList();
+            }
         }
 
-        return new List<int>();
+        return taskInfo;
     }
 }
