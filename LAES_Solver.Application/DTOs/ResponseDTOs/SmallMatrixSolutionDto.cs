@@ -2,5 +2,5 @@
 
 public class SmallMatrixSolutionDto
 {
-    public double[] VectorX { get; set; }
+    public List<double> VectorX { get; set; }
 }

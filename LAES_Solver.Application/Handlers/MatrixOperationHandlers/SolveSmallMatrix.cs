@@ -9,7 +9,22 @@ public static class SolveSmallMatrix
 {
     public static HandlerResponse Execute(SolveSmallMatrixDto dto, LltService lltService)
     {
+        Console.WriteLine("MARIXAS");
+        foreach (var item in dto.Matrix)
+        {
+            foreach (var item1 in item)
+            {
+                Console.WriteLine( item1.GetType());
+            }
+        }
+        Console.WriteLine("VectorB");
+        foreach (var item in dto.VectorB)
+        {
+            Console.WriteLine(item.GetType());
+        }
+
         var matrixL = lltService.LLT(dto.Matrix);
+
         var vectorX = lltService.Solve(matrixL, dto.VectorB);
 
         var responseDto = new SmallMatrixSolutionDto() { VectorX = vectorX };

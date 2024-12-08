@@ -2,14 +2,14 @@
 
 public class LltService
 {
-    public double[][] LLT(double[][] A)
+    public List<List<double>> LLT(List<List<double>> A)
     {
-        int n = A.Length;
-        double[][] L = new double[n][];
+        int n = A.Count;
+        var L = new List<List<double>>();
 
         for (int i = 0; i < n; i++)
         {
-            L[i] = new double[n];
+            L.Add(new List<double>(new double[n]));
         }
 
         for (int i = 0; i < n; i++)
@@ -34,11 +34,11 @@ public class LltService
         return L;
     }
 
-    public double[] Solve(double[][] L, double[] b)
+    public List<double> Solve(List<List<double>> L, List<double> b)
     {
-        int n = L.Length;
-        double[] y = new double[n];
-        double[] x = new double[n];
+        int n = L.Count;
+        var y = new List<double>(new double[n]);
+        var x = new List<double>(new double[n]);
 
         for (int i = 0; i < n; i++)
         {

@@ -21,19 +21,19 @@ public class WebSocketSessions
         return connection;
     }
 
-    public void SendTo(string id, string message)
+    public async Task SendToAsync(string id, string message)
     {
         if (_sessions.TryGetValue(id, out var connection))
         {
-            connection.SendMessageAsync(message).Wait();
+            await connection.SendMessageAsync(message);
         }
     }
 
-    public void SendToMany(string[] ids, string message)
+    public async Task SendToManyAsync(string[] ids, string message)
     {
         foreach (var id in ids)
         {
-            SendTo(id, message);
+            await SendToAsync(id, message);
         }
     }
 }

@@ -2,7 +2,6 @@
 
 public class SolveSmallMatrixDto
 {
-    public double[][] Matrix { get; set; }
-    public double[] VectorB { get; set; }
-
+    public List<List<double>> Matrix { get; set; }
+    public List<double> VectorB { get; set; }
 }

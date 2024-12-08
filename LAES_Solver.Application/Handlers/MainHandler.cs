@@ -21,6 +21,8 @@ public class MainHandler
     {
         HandlerResponse? response = null;
         var jsonData = message.Dto.ToString();
+        Console.WriteLine(jsonData);
+        Console.WriteLine("jsonData");
         switch (message.Command)
         {
             case "SolveSmallMatrix":
