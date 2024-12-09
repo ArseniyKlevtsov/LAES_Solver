@@ -93,5 +93,7 @@ public class LltTaskservice
             x[i] = (y[i] - sum) / rowLti[i];
         }
         await matrixFileService.WriteVectorDataAsync(taskName, "x", x);
+
+        await matrixFileService.SetInfoAsync(taskName, "Solved", "solved");
     }
 }

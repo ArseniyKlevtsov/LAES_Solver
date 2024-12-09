@@ -21,6 +21,31 @@ public class MatrixFileService : IMatrixFileService
         }
     }
 
+    public async Task SetInfoAsync(string taskName, string infoName, string infoData)
+    {
+        var taskDirectory = Path.Combine(_baseDirectory, "MatrixData", taskName);
+        var taskKeyFilePath = Path.Combine(taskDirectory, "TaskInfo.txt");
+
+        var lines = new List<string>();
+        if (File.Exists(taskKeyFilePath))
+        {
+            lines = (await File.ReadAllLinesAsync(taskKeyFilePath)).ToList();
+        }
+
+        lines.RemoveAll(line => line.StartsWith($"{infoName}:"));
+
+        var lineToAdd = $"{infoName}: {infoData}";
+        lines.Add(lineToAdd);
+
+        using (var writer = new StreamWriter(taskKeyFilePath, false))
+        {
+            foreach (var line in lines)
+            {
+                await writer.WriteLineAsync(line);
+            }
+        }
+    }
+
     public async Task<string> InitMatrixTaskAsync(string taskKey, int rowCount)
     {
         var taskGuid = Guid.NewGuid().ToString();

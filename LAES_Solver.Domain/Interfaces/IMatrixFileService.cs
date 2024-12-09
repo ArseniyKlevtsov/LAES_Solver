@@ -12,4 +12,5 @@ public interface IMatrixFileService
     Task<List<double>> ReadVectorDataAsync(string taskName, string fileName);
     void DeleteTask(string taskName);
     Task<TaskInfo> GetTaskInfoAsync(string taskName);
+    Task SetInfoAsync(string taskName, string infoName, string infoData);
 }
