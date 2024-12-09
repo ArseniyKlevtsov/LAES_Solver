@@ -3,11 +3,11 @@ using LAES_Solver.Domain.Interfaces;
 
 namespace LAES_Solver.Application.Services;
 
-public class LltTaskservice
+public class LltTaskService
 {
     private readonly IMatrixFileService matrixFileService;
 
-    public LltTaskservice(IMatrixFileService matrixFileService)
+    public LltTaskService(IMatrixFileService matrixFileService)
     {
         this.matrixFileService = matrixFileService;
     }

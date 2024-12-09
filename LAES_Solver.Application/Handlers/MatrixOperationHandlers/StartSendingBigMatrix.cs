@@ -12,7 +12,7 @@ public static class StartSendingBigMatrix
         var taskName = await matrixFileService.InitMatrixTaskAsync(dto.TaskKey, dto.TotalRows);
         await matrixFileService.WriteVectorDataAsync(taskName, "b", dto.VectorB);
 
-        var message = new Message("StartSendingAccepted", new StartSendingAcceptedDto() { TaskName = taskName});
+        var message = new Message("StartSendingAccepted", new MatrixTaskDtoResponse() { TaskName = taskName});
         var handlerResponse = new HandlerResponse() { SenderMessage = message };
 
         return handlerResponse;

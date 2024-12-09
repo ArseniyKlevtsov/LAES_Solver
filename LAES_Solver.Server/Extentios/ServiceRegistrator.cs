@@ -23,6 +23,7 @@ public static class ServiceRegistrator
 
         //services
         services.AddTransient<LltService>();
+        services.AddTransient<LltTaskService>();
         services.AddTransient<ILoger, ConsoleLoger>();
         services.AddTransient<IDtoConvertor, DtoConvertor>();
         services.AddTransient<IMatrixFileService>(provider =>

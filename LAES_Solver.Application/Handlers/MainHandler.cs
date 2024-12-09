@@ -12,11 +12,13 @@ public class MainHandler
     private readonly IDtoConvertor dtoConvertor;
     private readonly IMatrixFileService matrixFileService;
     private readonly LltService lltService;
+    private readonly LltTaskService lltTaskService;
 
-    public MainHandler(IDtoConvertor dtoConvertor, LltService lltService, IMatrixFileService matrixFileService)
+    public MainHandler(IDtoConvertor dtoConvertor, LltService lltService, LltTaskService lltTaskService, IMatrixFileService matrixFileService)
     {
         this.dtoConvertor = dtoConvertor;
         this.lltService = lltService;
+        this.lltTaskService = lltTaskService;
         this.matrixFileService = matrixFileService;
     }
 
@@ -50,10 +52,14 @@ public class MainHandler
 
             case "StartSolving":
                 var solvingDto = dtoConvertor.ConvertToDto<MatrixTaskDto>(jsonData);
+                await MatrixTaskValidator.ValidateAsync(solvingDto.TaskKey, solvingDto.TaskName, matrixFileService);
+                response = await StartSolving.ExecuteAsync(solvingDto, matrixFileService, lltTaskService);
                 break;
 
             case "GetSolution":
                 var getSolutionDto = dtoConvertor.ConvertToDto<MatrixTaskDto>(jsonData);
+                await MatrixTaskValidator.ValidateAsync(getSolutionDto.TaskKey, getSolutionDto.TaskName, matrixFileService);
+                response = await GetSolution.ExecuteAsync(getSolutionDto, matrixFileService);
                 break;
 
             case "DeleteTask":
