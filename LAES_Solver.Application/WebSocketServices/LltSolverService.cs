@@ -1,4 +1,5 @@
-﻿using LAES_Solver.Application.Handlers;
+﻿using LAES_Solver.Application.DTOs.ResponseDTOs;
+using LAES_Solver.Application.Handlers;
 using LAES_Solver.Application.WebSocketUtilities;
 using LAES_Solver.Domain.Interfaces.Services;
 using LAES_Solver.Domain.ValueObjects;
@@ -38,6 +39,9 @@ public class LltSolverService : WebSocketService
 
     protected override async Task OnError(Exception exception)
     {
+        var errorDto = new ErrorDto() { ErrorMessage = exception.Message };
+        var message = new Message("Error", errorDto);
+        await SendMessageAsync(message);
         _loger.Log($"EXCEPTION");
         _loger.Log(exception.Message);
     }

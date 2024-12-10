@@ -14,8 +14,10 @@ public static class GetTaskStatus
         var message = new Message("TaskInfo", new TaskInfoDto()
         {
             TaskName = taskInfo.TaskName,
+            TaskKey = taskInfo.TaskKey,
             RowCount = taskInfo.RowCount,
             ReceivedRows = taskInfo.ReceivedRows,
+            Solved = taskInfo.Solved
         });
         var handlerResponse = new HandlerResponse() { SenderMessage = message };
 

@@ -94,6 +94,7 @@ public class LltTaskService
         }
         await matrixFileService.WriteVectorDataAsync(taskName, "x", x);
 
-        await matrixFileService.SetInfoAsync(taskName, "Solved", "solved");
+        taskInfo.Solved = true;
+        await matrixFileService.SetInfoAsync(taskName, taskInfo);
     }
 }

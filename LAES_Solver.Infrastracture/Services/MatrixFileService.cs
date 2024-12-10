@@ -1,5 +1,6 @@
 ﻿using LAES_Solver.Domain.Interfaces;
 using LAES_Solver.Domain.ValueObjects;
+using System.Text.Json;
 
 namespace LAES_Solver.Infrastracture.Services;
 
@@ -21,29 +22,14 @@ public class MatrixFileService : IMatrixFileService
         }
     }
 
-    public async Task SetInfoAsync(string taskName, string infoName, string infoData)
+    public async Task SetInfoAsync(string taskName, TaskInfo taskInfoData)
     {
         var taskDirectory = Path.Combine(_baseDirectory, "MatrixData", taskName);
-        var taskKeyFilePath = Path.Combine(taskDirectory, "TaskInfo.txt");
+        var taskInfoFilePath = Path.Combine(taskDirectory, "TaskInfo.json");
 
-        var lines = new List<string>();
-        if (File.Exists(taskKeyFilePath))
-        {
-            lines = (await File.ReadAllLinesAsync(taskKeyFilePath)).ToList();
-        }
+        var jsonContent = JsonSerializer.Serialize(taskInfoData, new JsonSerializerOptions { WriteIndented = true });
 
-        lines.RemoveAll(line => line.StartsWith($"{infoName}:"));
-
-        var lineToAdd = $"{infoName}: {infoData}";
-        lines.Add(lineToAdd);
-
-        using (var writer = new StreamWriter(taskKeyFilePath, false))
-        {
-            foreach (var line in lines)
-            {
-                await writer.WriteLineAsync(line);
-            }
-        }
+        await File.WriteAllTextAsync(taskInfoFilePath, jsonContent);
     }
 
     public async Task<string> InitMatrixTaskAsync(string taskKey, int rowCount)
@@ -56,9 +42,19 @@ public class MatrixFileService : IMatrixFileService
         Directory.CreateDirectory(Path.Combine(taskDirectory, "Matrices", "Lt"));
         Directory.CreateDirectory(Path.Combine(taskDirectory, "Vectors"));
 
-        var taskKeyFilePath = Path.Combine(taskDirectory, $"TaskInfo.txt");
-        var content = $"TaskKey: {taskKey}\nRowCount: {rowCount}\nReceivedRows:";
-        await File.WriteAllTextAsync(taskKeyFilePath, content);
+        var taskInfo = new TaskInfo
+        {
+            TaskName = taskGuid,
+            TaskKey = taskKey,
+            RowCount = rowCount,
+            ReceivedRows = new List<int>(),
+            Solved = false
+        };
+
+        var taskInfoFilePath = Path.Combine(taskDirectory, "TaskInfo.json");
+
+        var jsonContent = JsonSerializer.Serialize(taskInfo, new JsonSerializerOptions { WriteIndented = true });
+        await File.WriteAllTextAsync(taskInfoFilePath, jsonContent);
 
         return taskGuid;
     }
@@ -77,9 +73,26 @@ public class MatrixFileService : IMatrixFileService
         var content = string.Join(" ", rowData);
         await File.WriteAllTextAsync(rowFilePath, content);
 
-        var taskInfoFilePath = Path.Combine(_baseDirectory, "MatrixData", taskName, "TaskInfo.txt");
-        var indexContent = $" {rowIndex}"; 
-        await File.AppendAllTextAsync(taskInfoFilePath, indexContent);
+        await AddRowIndexAsync(taskName, rowIndex);
+    }
+
+    private async Task AddRowIndexAsync(string taskName, int rowIndex)
+    {
+        var taskInfoFilePath = Path.Combine(_baseDirectory, "MatrixData", taskName, "TaskInfo.json");
+
+        var taskInfo = await GetTaskInfoAsync(taskName);
+
+        if (!taskInfo.ReceivedRows.Contains(rowIndex))
+        {
+            taskInfo.ReceivedRows.Add(rowIndex);
+
+            var updatedJsonContent = JsonSerializer.Serialize(taskInfo, new JsonSerializerOptions { WriteIndented = true });
+            await File.WriteAllTextAsync(taskInfoFilePath, updatedJsonContent);
+        }
+        else
+        {
+            Console.WriteLine($"Row index {rowIndex} already exists in ReceivedRows.");
+        }
     }
 
     public async Task<List<double>> ReadRowDataAsync(string taskName, string matrixType, int rowIndex)
@@ -156,25 +169,16 @@ public class MatrixFileService : IMatrixFileService
 
     public async Task<bool> ValidateTaskKeyAsync(string taskName, string taskKey)
     {
-        var taskDirectory = Path.Combine(_baseDirectory, "MatrixData", taskName);
-        var taskKeyFilePath = Path.Combine(taskDirectory, "TaskInfo.txt");
-
-        if (!File.Exists(taskKeyFilePath))
+        try
         {
-            throw new FileNotFoundException($"TaskInfo file not found for task '{taskName}'.");
-        }
+            var taskInfo = await GetTaskInfoAsync(taskName);
 
-        var content = await File.ReadAllTextAsync(taskKeyFilePath);
-        foreach (var line in content.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
+            return taskInfo.TaskKey.Equals(taskKey, StringComparison.OrdinalIgnoreCase);
+        }
+        catch (FileNotFoundException)
         {
-            if (line.StartsWith("TaskKey:"))
-            {
-                var storedTaskKey = line.Substring("TaskKey:".Length).Trim();
-                return storedTaskKey.Equals(taskKey, StringComparison.OrdinalIgnoreCase);
-            }
+            return false;
         }
-
-        return false;
     }
 
     public void DeleteTask(string taskName)
@@ -192,37 +196,16 @@ public class MatrixFileService : IMatrixFileService
 
     public async Task<TaskInfo> GetTaskInfoAsync(string taskName)
     {
-        var taskInfoFilePath = Path.Combine(_baseDirectory, "MatrixData", taskName, "TaskInfo.txt");
+        var taskInfoFilePath = Path.Combine(_baseDirectory, "MatrixData", taskName, "TaskInfo.json");
 
         if (!File.Exists(taskInfoFilePath))
         {
             throw new FileNotFoundException($"TaskInfo file not found for task '{taskName}'.");
         }
 
-        var content = await File.ReadAllTextAsync(taskInfoFilePath);
-        var taskInfo = new TaskInfo
-        {
-            TaskName = taskName,
-            ReceivedRows = new List<int>()
-        };
+        var jsonContent = await File.ReadAllTextAsync(taskInfoFilePath);
 
-        foreach (var line in content.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
-        {
-            if (line.StartsWith("RowCount:"))
-            {
-                if (int.TryParse(line.Substring("RowCount:".Length).Trim(), out int rowCount))
-                {
-                    taskInfo.RowCount = rowCount;
-                }
-            }
-            else if (line.StartsWith("ReceivedRows:"))
-            {
-                var receivedRows = line.Substring("ReceivedRows:".Length).Trim();
-                taskInfo.ReceivedRows = receivedRows.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                                                     .Select(int.Parse)
-                                                     .ToList();
-            }
-        }
+        var taskInfo = JsonSerializer.Deserialize<TaskInfo>(jsonContent);
 
         return taskInfo;
     }
