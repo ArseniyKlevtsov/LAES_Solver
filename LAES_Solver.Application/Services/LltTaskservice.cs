@@ -60,7 +60,7 @@ public class LltTaskService
         return tempRow;
     }
 
-    public async Task Solve(string taskName)
+    public async Task SolveAsync(string taskName)
     {
         var taskInfo = await matrixFileService.GetTaskInfoAsync(taskName);
         int n = taskInfo.RowCount;

@@ -5,11 +5,13 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LAES_Solver.Server", "LAES_Solver.Server\LAES_Solver.Server.csproj", "{F2D45719-3699-48DE-B0EA-18B766811160}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LAES_Solver.Infrastracture", "LAES_Solver.Infrastracture\LAES_Solver.Infrastracture.csproj", "{B7258660-C760-487C-AFB4-A058AA39458D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LAES_Solver.Infrastracture", "LAES_Solver.Infrastracture\LAES_Solver.Infrastracture.csproj", "{B7258660-C760-487C-AFB4-A058AA39458D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LAES_Solver.Domain", "LAES_Solver.Domain\LAES_Solver.Domain.csproj", "{E2A6E14C-94A2-44F6-B315-4803E3A4936A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LAES_Solver.Domain", "LAES_Solver.Domain\LAES_Solver.Domain.csproj", "{E2A6E14C-94A2-44F6-B315-4803E3A4936A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LAES_Solver.Application", "LAES_Solver.Application\LAES_Solver.Application.csproj", "{5FF8283C-259B-4313-9848-570765A33BC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LAES_Solver.Application", "LAES_Solver.Application\LAES_Solver.Application.csproj", "{5FF8283C-259B-4313-9848-570765A33BC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LAES_Solver.Tests", "LAES_Solver.Tests\LAES_Solver.Tests.csproj", "{2B200B38-FA46-4D1F-B9E3-4DE6A77E9C02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5FF8283C-259B-4313-9848-570765A33BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FF8283C-259B-4313-9848-570765A33BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FF8283C-259B-4313-9848-570765A33BC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B200B38-FA46-4D1F-B9E3-4DE6A77E9C02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B200B38-FA46-4D1F-B9E3-4DE6A77E9C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B200B38-FA46-4D1F-B9E3-4DE6A77E9C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B200B38-FA46-4D1F-B9E3-4DE6A77E9C02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

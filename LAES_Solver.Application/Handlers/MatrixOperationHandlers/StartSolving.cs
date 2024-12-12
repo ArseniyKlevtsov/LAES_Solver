@@ -11,7 +11,7 @@ public static class StartSolving
     public static async Task<HandlerResponse> ExecuteAsync(MatrixTaskDto dto, IMatrixFileService matrixFileService, LltTaskService lltTaskService)
     {
         await lltTaskService.LLTAsync(dto.TaskName);
-        await lltTaskService.Solve(dto.TaskName);
+        await lltTaskService.SolveAsync(dto.TaskName);
 
         var message = new Message("TaskSolved", new MatrixTaskDtoResponse()
         {
