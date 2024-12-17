@@ -28,7 +28,7 @@ public class WebSocketConnection
         {
             try
             {
-                var buffer = new byte[1024];
+                var buffer = new byte[8192];
                 var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
                 if (OnMessage != null)

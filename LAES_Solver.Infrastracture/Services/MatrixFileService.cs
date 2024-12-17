@@ -72,8 +72,10 @@ public class MatrixFileService : IMatrixFileService
         var rowFilePath = Path.Combine(matrixPath, $"{rowIndex}.txt");
         var content = string.Join(" ", rowData);
         await File.WriteAllTextAsync(rowFilePath, content);
-
-        await AddRowIndexAsync(taskName, rowIndex);
+        if(matrixType == "A")
+        {
+            await AddRowIndexAsync(taskName, rowIndex);
+        }
     }
 
     private async Task AddRowIndexAsync(string taskName, int rowIndex)

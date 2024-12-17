@@ -18,7 +18,7 @@ public class Program
         var lltService = serviceProvider.GetRequiredService<LltSolverService>();
 
         server.RegisterService("/lltService", lltService);
-        server.StartOn("http://localhost:5000/");
+        server.StartOn("http://+:5001/");
 
         Console.WriteLine("Press Enter to stop server");
         Console.ReadLine();
